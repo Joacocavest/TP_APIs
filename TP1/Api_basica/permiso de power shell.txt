@@ -1,0 +1,3 @@
+Comando para dar permiso al entorno virtual de activarse
+
+Set-ExecutionPolicy Unrestricted -Scope CurrentUser
