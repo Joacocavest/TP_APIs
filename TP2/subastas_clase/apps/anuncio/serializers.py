@@ -13,6 +13,7 @@ class CategoriaSerializer(serializers.ModelSerializer):
 
 
 class AnuncioSerializer(serializers.ModelSerializer):
+    categorias = serializers.StringRelatedField(many=True)
     class Meta:
         model=Anuncio
         fields= [
