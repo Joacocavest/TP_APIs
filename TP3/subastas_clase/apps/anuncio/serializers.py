@@ -24,6 +24,7 @@ class AnuncioSerializer(serializers.ModelSerializer):
             'precio_inicial',
             'fecha_publicacion',
             'fecha_inicio',
+            'fecha_fin',
             'activo',
             'categorias',
             'publicado_por',
