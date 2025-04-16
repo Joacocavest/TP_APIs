@@ -1,5 +1,5 @@
-from django.urls import path
-
+from django.urls import path, include
+from .router import router
 from apps.anuncio.api import AnuncioDetalleAPIView, AnunciosAPIView, CategoriaAPIView, CategoriaDetalleAPIView, CategoriaDetalleGenericView, CategoriaListaGenericView, DetalleAnuncioGenericView, ListaAnunciosGenericView
 
 
@@ -17,4 +17,6 @@ urlpatterns = [
     path('generic-view/categoria/<int:pk>', CategoriaDetalleGenericView.as_view()),
     path('generic-view/anuncio/', ListaAnunciosGenericView.as_view()),
     path('generic-view/anuncio/<int:pk>', DetalleAnuncioGenericView.as_view()),
+
+    path('view-set/', include(router.urls)),
 ]

@@ -23,7 +23,7 @@ class Anuncio(models.Model):
     categorias = models.ManyToManyField(Categoria, blank=True)
     publicado_por = models.ForeignKey('usuario.Usuario', on_delete=models.CASCADE, related_name='anuncios_publicados')
     oferta_ganadora = models.OneToOneField('OfertaAnuncio', on_delete=models.SET_NULL,
-                                           related_name='oferta_ganadora', blank=True, null=True)
+                                        related_name='oferta_ganadora', blank=True, null=True)
 
     class Meta:
         ordering = ('fecha_inicio',)

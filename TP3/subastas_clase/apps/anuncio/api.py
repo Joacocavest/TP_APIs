@@ -6,6 +6,8 @@ from rest_framework.generics import get_object_or_404, ListCreateAPIView, Retrie
 from apps.anuncio.models import Anuncio, Categoria
 from apps.anuncio.serializers import AnuncioSerializer, CategoriaSerializer
 from apps.usuario.models import Usuario
+from rest_framework.decorators import action
+from django.utils import timezone
 
 class CategoriaAPIView(APIView):
     #defino el metodo get para devolver la lista de categorias cuando la solicitud proviene del metodo get
@@ -155,8 +157,23 @@ class AnuncioViewSet(viewsets.ModelViewSet):
         serializer.save(publicado_por=usuario)
 
 
-
-
+#Accion personalizada que devuelve el timepo restante
+#solo es para lectura por el cual utilizamos el metodo 'get', la accion se le aplica a un objeto en este caso un anuncio
+    @action(detail=True, methods=['get']) 
+    def tiempo_restante(self, request, pk=None):
+        anuncio = self.get_object()
+        if anuncio.fecha_fin:
+            ahora = timezone.now()
+            restante = anuncio.fecha_fin - ahora
+            dias = restante.days
+            horas, resto = divmod(restante.seconds, 3600)
+            minutos, _ = divmod(resto, 60)
+            return Response({
+                'días': dias,
+                'horas': horas,
+                'minutos': minutos
+            })
+        return Response({"mensaje": "El anuncio no tiene una fecha de fin definida."})
 
 
 
