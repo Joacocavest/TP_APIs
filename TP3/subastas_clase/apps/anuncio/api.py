@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.generics import get_object_or_404, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from apps.anuncio.models import Anuncio, Categoria
-from apps.anuncio.serializers import AnuncioSerializer, CategoriaSerializer
+from apps.anuncio.serializers import AnuncioReadSerializer, AnuncioSerializer, CategoriaSerializer
 from apps.usuario.models import Usuario
 from rest_framework.decorators import action
 from django.utils import timezone
@@ -147,7 +147,12 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 #CRUD Anuncio
 class AnuncioViewSet(viewsets.ModelViewSet):
     queryset = Anuncio.objects.all()
-    serializer_class = AnuncioSerializer
+    serializer_class = AnuncioSerializer #getSerializer
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return AnuncioReadSerializer
+        return AnuncioSerializer
 
 # Por el momento, en ambos casos forzar la asignación de un usuario (Considerar sobrescribir el método “perform_create” 
 # para asignar un usuario cuando se crea un anuncio).
