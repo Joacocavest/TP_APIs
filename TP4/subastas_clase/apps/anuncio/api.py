@@ -9,7 +9,7 @@ from apps.usuario.models import Usuario
 from rest_framework.decorators import action
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
-from apps.anuncio.filters import CategoriaFilter
+from apps.anuncio.filters import AnuncioFilter, CategoriaFilter
 
 class CategoriaAPIView(APIView):
     #defino el metodo get para devolver la lista de categorias cuando la solicitud proviene del metodo get
@@ -181,7 +181,18 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 #CRUD Anuncio
 class AnuncioViewSet(viewsets.ModelViewSet):
     queryset = Anuncio.objects.all()
-    serializer_class = AnuncioSerializer #getSerializer
+    serializer_class = AnuncioSerializer
+
+    #####################
+# Uso de DjangoFilterBackend
+#Si solo se necesita hacer un filtrado simple, por igualdad de algún campo del modelo,
+#se puede establecer un atributo filterset_fields en la vista, indicando los campos a filtrar
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_class = AnuncioFilter
+# Uso de OrderingFilter:
+#OrderingFilter proviene del paquete "rest_framework.filters", admite la ordenacion de los resultados controlada por los parametros de la consulta.
+#Se recomienda especificar explicitamente por cuales campos se va a ordenar el resultado
+    ordering_fields = ['titulo', 'fecha_inicio', 'fecha_fin']
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
