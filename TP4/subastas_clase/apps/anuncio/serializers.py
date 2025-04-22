@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.utils import timezone
 from .models import Anuncio, Categoria
 
 
@@ -73,3 +74,33 @@ class AnuncioSerializer(serializers.ModelSerializer):
         read_only_fields = ['publicado_por', 'oferta_ganadora']
 
 
+
+
+#######################################################################
+#                           TPN°4                                     #
+#######################################################################    
+
+####Validaciones
+
+    def validate_fecha_inicio(self, value):
+        if value < timezone.now():
+            raise serializers.ValidationError("La fecha de inicio debe ser posterior a hoy.")
+        return value
+
+    def validate(self, data):
+        fecha_inicio = data.get("fecha_inicio")
+        fecha_fin = data.get("fecha_fin")
+
+        if fecha_fin and fecha_inicio <= fecha_inicio:
+            raise serializers.ValidationError("La fecha de fin debe ser posterior a la de inicio.")
+        return data
+
+
+##Filtros basicos
+
+def get_queryset(self):
+    queryset = Anuncio.objects.all()
+    titulo = self.request.query_params.get('titulo', None)
+    if titulo is not None:
+        queryset = queryset.filter(titulo=titulo)
+    return queryset

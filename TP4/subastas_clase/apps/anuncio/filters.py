@@ -17,7 +17,6 @@ class AnuncioFilter(filters.FilterSet):
     titulo = filters.CharFilter(field_name='titulo', lookup_expr='icontains')
     fecha_inicio = filters.DateFromToRangeFilter(field_name='fecha_inicio')
     fecha_fin = filters.DateFromToRangeFilter(field_name='fecha_fin')
-    categorias = filters.CharFilter(field_name='categoria', lookup_expr='icontains')
     class Meta:
         model = Anuncio
         fields = [
@@ -25,3 +24,5 @@ class AnuncioFilter(filters.FilterSet):
             'fecha_inicio',
             'fecha_fin',
         ]
+
+
