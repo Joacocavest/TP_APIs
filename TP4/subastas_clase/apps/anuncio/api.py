@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets, filters
+from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.generics import get_object_or_404, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from apps.anuncio.models import Anuncio, Categoria
 from apps.anuncio.serializers import AnuncioReadSerializer, AnuncioSerializer, CategoriaSerializer
@@ -225,20 +226,11 @@ class AnuncioViewSet(viewsets.ModelViewSet):
             })
         return Response({"mensaje": "El anuncio no tiene una fecha de fin definida."})
 
+##Filtros basicos
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                
+    def get_queryset(self):
+        queryset = Anuncio.objects.all()
+        titulo = self.request.query_params.get('titulo', None)
+        if titulo is not None:
+            queryset = queryset.filter(titulo=titulo)
+        return queryset

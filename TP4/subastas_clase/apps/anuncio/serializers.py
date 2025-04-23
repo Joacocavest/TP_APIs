@@ -74,8 +74,6 @@ class AnuncioSerializer(serializers.ModelSerializer):
         read_only_fields = ['publicado_por', 'oferta_ganadora']
 
 
-
-
 #######################################################################
 #                           TPN°4                                     #
 #######################################################################    
@@ -94,13 +92,3 @@ class AnuncioSerializer(serializers.ModelSerializer):
         if fecha_fin and fecha_inicio <= fecha_inicio:
             raise serializers.ValidationError("La fecha de fin debe ser posterior a la de inicio.")
         return data
-
-
-##Filtros basicos
-
-def get_queryset(self):
-    queryset = Anuncio.objects.all()
-    titulo = self.request.query_params.get('titulo', None)
-    if titulo is not None:
-        queryset = queryset.filter(titulo=titulo)
-    return queryset
