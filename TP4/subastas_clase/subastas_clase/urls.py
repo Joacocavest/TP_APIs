@@ -18,7 +18,6 @@ from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from django.urls import include, path
 from apps.usuario.api import UsuarioViewSetV1, UsuarioViewSetV2
-from apps.anuncio.api import AnuncioViewSetV1
 
 router_v1 = DefaultRouter()
 router_v1.register(r'usuarios', UsuarioViewSetV1, basename='usuarios-v1')
