@@ -89,6 +89,6 @@ class AnuncioSerializer(serializers.ModelSerializer):
         fecha_inicio = data.get("fecha_inicio")
         fecha_fin = data.get("fecha_fin")
 
-        if fecha_fin and fecha_inicio <= fecha_inicio:
+        if fecha_fin and fecha_fin <= fecha_inicio:
             raise serializers.ValidationError("La fecha de fin debe ser posterior a la de inicio.")
         return data
