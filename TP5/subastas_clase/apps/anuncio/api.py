@@ -208,9 +208,6 @@ class AnuncioViewSet(viewsets.ModelViewSet):
 # para asignar un usuario cuando se crea un anuncio).
     def perform_create(self, serializer):
         #Asignar el usuario con id=1
-
-
-
 #######################################################################
 #                           TPN°5                                     #
 #######################################################################

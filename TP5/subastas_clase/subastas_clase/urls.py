@@ -39,7 +39,9 @@ urlpatterns = [
     path('api/v1/', include(router_v1.urls)),
     path('api/v2/', include(router_v2.urls)),
 #####path del TP5######
-    path('api-token-auth/', obtain_auth_token,)
+    path('api-token-auth/', obtain_auth_token,),
+
+    path('api-auth/', include('rest_framework.urls')),
 ]
 
 # Trabajo Practico N°5
