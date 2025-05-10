@@ -5,13 +5,14 @@ from rest_framework import status, viewsets, filters
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.generics import get_object_or_404, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from apps.anuncio.models import Anuncio, Categoria
-from apps.anuncio.serializers import AnuncioReadSerializer, AnuncioSerializer, CategoriaSerializer
+from apps.anuncio.serializers import AnuncioReadSerializer, AnuncioSerializer, CategoriaSerializer, OfertaSerializer
 from apps.usuario.models import Usuario
 from rest_framework.decorators import action
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from apps.anuncio.filters import AnuncioFilter, CategoriaFilter
-from guardian.shortcuts import assign_perm
+from apps.anuncio.permissions import IsOwnerOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 
 class CategoriaAPIView(APIView):
     #defino el metodo get para devolver la lista de categorias cuando la solicitud proviene del metodo get
@@ -184,10 +185,7 @@ class CategoriaViewSet(viewsets.ModelViewSet):
 class AnuncioViewSet(viewsets.ModelViewSet):
     queryset = Anuncio.objects.all()
     serializer_class = AnuncioSerializer
-
-
-    def perform_create(self, serializer):
-        serializer.save(publicado_por=self.request.user)
+    lookup_field = 'uuid'
     #####################
 # Uso de DjangoFilterBackend
 #Si solo se necesita hacer un filtrado simple, por igualdad de algún campo del modelo,
@@ -199,6 +197,9 @@ class AnuncioViewSet(viewsets.ModelViewSet):
 #Se recomienda especificar explicitamente por cuales campos se va a ordenar el resultado
     ordering_fields = ['titulo', 'fecha_inicio', 'fecha_fin']
 
+#### T      TPN5        ###
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
             return AnuncioReadSerializer
@@ -206,14 +207,11 @@ class AnuncioViewSet(viewsets.ModelViewSet):
 
 # Por el momento, en ambos casos forzar la asignación de un usuario (Considerar sobrescribir el método “perform_create” 
 # para asignar un usuario cuando se crea un anuncio).
+
     def perform_create(self, serializer):
         #Asignar el usuario con id=1
-#######################################################################
-#                           TPN°5                                     #
-#######################################################################
-        anuncio = serializer.save(publicado_por=self.request.user)
-        assign_perm('change_anuncio', self.request.user, anuncio)
-        assign_perm('delete_anuncio', self.request.user, anuncio)
+        #usuario = Usuario.objects.get(id=1)
+        serializer.save(publicado_por=self.request.user)
 
 
 #Accion personalizada que devuelve el timepo restante
@@ -242,3 +240,29 @@ class AnuncioViewSet(viewsets.ModelViewSet):
         if titulo is not None:
             queryset = queryset.filter(titulo=titulo)
         return queryset
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def ofertar(self, request, pk=None):
+            anuncio = self.get_object()
+
+            # No permitir si el anuncio no está activo
+            if not anuncio.activo:
+                return Response({"error": "El anuncio no está activo."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # No permitir que el creador oferte
+            if anuncio.publicado_por == request.user:
+                return Response({"error": "No podés ofertar en tu propio anuncio."}, status=status.HTTP_403_FORBIDDEN)
+
+            serializer = OfertaSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(anuncio=anuncio, usuario=request.user)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
+    def ofertas(self, request, pk=None):
+        anuncio = self.get_object()
+        ofertas = anuncio.ofertas.all()
+        serializer = OfertaSerializer(ofertas, many=True)
+        return Response(serializer.data)
