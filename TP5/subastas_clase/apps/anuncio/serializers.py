@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.utils import timezone
-from .models import Anuncio, Categoria
+from .models import Anuncio, Categoria, OfertaAnuncio
 
 
 class CategoriaSerializer(serializers.ModelSerializer): 
@@ -60,7 +60,7 @@ class AnuncioSerializer(serializers.ModelSerializer):
     class Meta:
         model=Anuncio
         fields= [
-            'id',
+            'uuid',
             'titulo',
             'precio_inicial',
             'fecha_publicacion',
@@ -71,7 +71,7 @@ class AnuncioSerializer(serializers.ModelSerializer):
             'publicado_por',
             'oferta_ganadora',
         ]
-        read_only_fields = ['oferta_ganadora']
+        read_only_fields = ['publicado_por']
 
 
 #######################################################################
@@ -92,3 +92,14 @@ class AnuncioSerializer(serializers.ModelSerializer):
         if fecha_fin and fecha_fin <= fecha_inicio:
             raise serializers.ValidationError("La fecha de fin debe ser posterior a la de inicio.")
         return data
+    
+#######################################################################
+#                           TPN°5                                     #
+#######################################################################
+
+
+class OfertaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OfertaAnuncio
+        fields = ['id', 'anuncio', 'precio_oferta', 'fecha_oferta']
+        read_only_fields = ['fecha_oferta']

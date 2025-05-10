@@ -18,9 +18,9 @@ from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from django.urls import include, path
 from apps.usuario.api import UsuarioViewSetV1, UsuarioViewSetV2
-###################################################
-#        TP5
 from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView,)
+
 
 router_v1 = DefaultRouter()
 router_v1.register(r'usuarios', UsuarioViewSetV1, basename='usuarios-v1')
@@ -38,17 +38,14 @@ urlpatterns = [
 #####path del TP4######
     path('api/v1/', include(router_v1.urls)),
     path('api/v2/', include(router_v2.urls)),
+    
 #####path del TP5######
-    path('api-token-auth/', obtain_auth_token,),
 
+    ##PARA EL TOKEN BASIC
+    #path('api-token-auth/', obtain_auth_token),
+
+    ##PARA JWT authentication
+    path('api/token/', TokenObtainPairView.as_view()),
+    path('api/token/refresh/', TokenRefreshView.as_view()),
     path('api-auth/', include('rest_framework.urls')),
 ]
-
-# Trabajo Practico N°5
-# Justificación del uso de Token Authentication:
-    # Se elige el esquema Token Authentication por lo siguiente:
-    # Ofrece más seguridad que la autenticación básica, porque no se envían las credenciales con cada solicitud, sino un token que genera el servidor.
-    # Es más sencilla de implementar que JWT o OAuth 2.0, sobre todo para APIs internas o proyectos de complejidad media como el del sistema de subastas.
-    # Permite una gestión sencilla de los tokens, la revocación o la regeneración se puede realizar desde la base de datos (modelo Token de DRF).
-    # Es adecuada para autenticación sin estado (stateless), y para su uso con clientes móviles, SPA o integraciones simples.
-    # No requiere infraestructura adicional (servidores de autorización para OAuth) y tampoco la firma de tokens como sucede con JWT, lo cual acorta el tiempo de desarrollo.

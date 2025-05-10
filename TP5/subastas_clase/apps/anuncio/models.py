@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth import get_user_model
+
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
@@ -12,6 +12,7 @@ class Categoria(models.Model):
 
 
 class Anuncio(models.Model):
+    uuid = models.UUIDField(unique=True, editable=False, default="uuid4")
     titulo = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True)
     precio_inicial = models.DecimalField(decimal_places=2, max_digits=10)
@@ -21,13 +22,8 @@ class Anuncio(models.Model):
     fecha_fin = models.DateTimeField(blank=True, null=True)
     activo = models.BooleanField(default=True)
     categorias = models.ManyToManyField(Categoria, blank=True)
-    publicado_por = models.ForeignKey(
-        get_user_model(), 
-        on_delete=models.CASCADE,
-        related_name='anuncios_publicados'
-    )
-    oferta_ganadora = models.OneToOneField('OfertaAnuncio', on_delete=models.SET_NULL,
-                                        related_name='oferta_ganadora', blank=True, null=True)
+    publicado_por = models.ForeignKey('usuario.Usuario', on_delete=models.CASCADE, related_name='anuncios_publicados')
+    oferta_ganadora = models.OneToOneField('OfertaAnuncio', on_delete=models.SET_NULL, related_name='oferta_ganadora', blank=True, null=True)
 
     class Meta:
         ordering = ('fecha_inicio',)
@@ -59,9 +55,9 @@ class OfertaAnuncio(models.Model):
 
         # Validar si la oferta es mayor a las ofertas anteriores
         if self.id:
-            ultima_oferta = self.anuncio.ofertas.exclude(id=self.id).order_by('-precio_oferta').first()
+            ultima_oferta = self.anuncio.ofertas.exclude(id=self.id).order_by('precio_oferta').first()
         else:
-            ultima_oferta = self.anuncio.ofertas.order_by('-precio_oferta').first()
+            ultima_oferta = self.anuncio.ofertas.order_by('precio_oferta').first()
 
         if ultima_oferta and self.precio_oferta <= ultima_oferta.precio_oferta:
             raise ValidationError(f"La oferta debe ser mayor que la oferta más alta actual.(${ultima_oferta.precio_oferta})")

@@ -22,6 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ogj^q#mk!a9y20w9yh$&ch2xz($n_aprls6-czdvus0hgfbri2'
 
+
+##Autorizacion por JWT#######
+SIMPLE_JWT = {
+    'SIGNING_KEY': SECRET_KEY, # Presente por defecto en settings
+    'ALGORITHM': 'HS256', # Algoritmo de firma 
+}
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -48,14 +56,10 @@ INSTALLED_APPS = [
 #######################################################################
 #                           TPN°5                                     #
 #######################################################################
-    'rest_framework.authtoken',
-    'guardian',
-]
+    'rest_framework.authtoken',  ##TOKEN BASIC
 
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'guardian.backends.ObjectPermissionBackend',
-)
+    'rest_framework_simplejwt',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -157,17 +161,25 @@ REST_FRAMEWORK= {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
     'ALLOWED_VERSIONS': ['v1','v2'],
     'DEFAULT_VERSION': 'v1',
+
 #######################################################################
 #                           TPN°5                                     #
 #######################################################################
-    'DEFAULT_AUTHENTICATION_CLASSES':[
-        'rest_framework.authentication.TokenAuthentication',
+    'DEFAULT_PERMISSION_CLASSES':[
+        'rest_framework.permissions.IsAuthenticated', #requiere autenticacion, si no lo pongo aunque utilice TOKEN, digo que el aceso al api sera inrestricto
+        'rest_framework.permissions.DjangoModelPermissions',
+
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoObjectPermissions',
+    # 'DEFAULT_AUTHENTICATION_CLASSES':[
+    #     'rest_framework.authentication.TokenAuthentication',
+    # ]                                  ^
+    #                                   |
+    ##Autenticacion por TOken BASiC  ---
+
+
+    ##PARA JWT AUTORIZATION
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-] 
 }
 
