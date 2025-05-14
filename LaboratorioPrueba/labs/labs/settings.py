@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'servicios',
-     'drf_yasg',
-    'corsheaders',
+    'drf_yasg',
+    # 'corsheaders',
 ]
 AUTH_USER_MODEL = 'servicios.Usuario'
 MIDDLEWARE = [
