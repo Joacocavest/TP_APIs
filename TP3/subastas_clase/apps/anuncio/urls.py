@@ -12,7 +12,6 @@ urlpatterns = [
     path('api-view/anuncio/<int:pk>', AnuncioDetalleAPIView.as_view()),
 
 #PATH del tp3:
-
     path('generic-view/categoria/', CategoriaListaGenericView.as_view()),
     path('generic-view/categoria/<int:pk>', CategoriaDetalleGenericView.as_view()),
     path('generic-view/anuncio/', ListaAnunciosGenericView.as_view()),

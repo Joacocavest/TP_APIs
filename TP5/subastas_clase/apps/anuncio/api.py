@@ -197,7 +197,7 @@ class AnuncioViewSet(viewsets.ModelViewSet):
 #Se recomienda especificar explicitamente por cuales campos se va a ordenar el resultado
     ordering_fields = ['titulo', 'fecha_inicio', 'fecha_fin']
 
-#### T      TPN5        ###
+####      TPN5        ###
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     def get_serializer_class(self):

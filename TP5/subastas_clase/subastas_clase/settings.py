@@ -165,6 +165,11 @@ REST_FRAMEWORK= {
 #######################################################################
 #                           TPN°5                                     #
 #######################################################################
+    ##PARA JWT AUTORIZATION
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+
     'DEFAULT_PERMISSION_CLASSES':[
         'rest_framework.permissions.IsAuthenticated', #requiere autenticacion, si no lo pongo aunque utilice TOKEN, digo que el aceso al api sera inrestricto
         'rest_framework.permissions.DjangoModelPermissions',
@@ -176,10 +181,5 @@ REST_FRAMEWORK= {
     #                                   |
     ##Autenticacion por TOken BASiC  ---
 
-
-    ##PARA JWT AUTORIZATION
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-    'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
 }
 
