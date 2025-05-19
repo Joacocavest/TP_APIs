@@ -13,7 +13,8 @@ class CategoriaSerializer(serializers.ModelSerializer):
 
 
 class AnuncioSerializer(serializers.ModelSerializer):
-    categorias = serializers.StringRelatedField(many=True)
+    categorias = serializers.PrimaryKeyRelatedField(queryset=Categoria.objects.all(), many=True) #Deja enviar el id de la categoria cuando el metodo es POST
+    #categorias = serializers.StringRelatedField(many=True) #StringRelatedField es solo de lectura, no deja enviar categorias cuando el metodo es POST en la vista
     class Meta:
         model=Anuncio
         fields= [

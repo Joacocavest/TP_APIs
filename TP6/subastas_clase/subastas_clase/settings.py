@@ -46,24 +46,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-#######################################################################
-#                           TPN°4                                     #
-#######################################################################
+#-----------------------------------------------------------------------------
     'django_filters',  #pip install django-filter
-#######################################################################
     'apps.usuario',
     'apps.anuncio',
-#######################################################################
-#                           TPN°5                                     #
-#######################################################################
-    'rest_framework.authtoken',  ##TOKEN BASIC
-    'rest_framework_simplejwt',
-
-#######################################################################
-#                           TPN°6                                     #
-#######################################################################
+#-----------------------------------------------------------------------------
+    'rest_framework_simplejwt', #aUTENTICACION CON JWT (JSON WEB TOKEN)
+#-----------------------------------------------------------------------------
     'drf_spectacular',
-
 ]
 
 MIDDLEWARE = [
@@ -155,9 +145,7 @@ REST_FRAMEWORK= {
         'rest_framework.renderers.JSONRenderer',  
         'rest_framework.renderers.BrowsableAPIRenderer'
     ],
-#######################################################################
-#                           TPN°4                                     #
-#######################################################################
+#-----------------------------------------------------------------------------
     'DEFAULT_FILTER_BACKENDS':[
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
@@ -166,38 +154,19 @@ REST_FRAMEWORK= {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
     'ALLOWED_VERSIONS': ['v1','v2'],
     'DEFAULT_VERSION': 'v1',
-
-#######################################################################
-#                           TPN°5                                     #
-#######################################################################
-    'DEFAULT_PERMISSION_CLASSES':[
-        'rest_framework.permissions.IsAuthenticated', #requiere autenticacion, si no lo pongo aunque utilice TOKEN, digo que el aceso al api sera inrestricto
-        'rest_framework.permissions.DjangoModelPermissions',
-
-    ],
-    # 'DEFAULT_AUTHENTICATION_CLASSES':[
-    #     'rest_framework.authentication.TokenAuthentication',
-    # ]                                  ^
-    #                                   |
-    ##Autenticacion por TOken BASiC  ---
-
-
-    ##PARA JWT AUTORIZATION
+#-----------------------------------------------------------------------------
+    #PARA JWT AUTORIZATION
     'DEFAULT_AUTHENTICATION_CLASSES': [
     'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-#######################################################################
-#                           TPN°6                                     #
-#######################################################################
+
+    'DEFAULT_PERMISSION_CLASSES':[
+        'rest_framework.permissions.IsAuthenticated', #requiere autenticacion, si no lo pongo aunque utilice TOKEN, digo que el aceso al api sera inrestricto
+        'rest_framework.permissions.DjangoModelPermissions',
+    ],
+#-----------------------------------------------------------------------------
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
-
-
-
-
-#######################################################################
-#                           TPN°6                                     #
-#######################################################################
-
+#-----------------------------------------------------------------------------
 EXCHANGE_RATE_API_KEY = 'c071f301bfbf817180f08c21' #API KEY
 EXCHANGE_RATE_BASE_URL = 'https://v6.exchangerate-api.com/v6' #URL base de la API

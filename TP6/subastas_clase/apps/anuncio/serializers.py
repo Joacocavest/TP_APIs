@@ -14,10 +14,6 @@ class CategoriaSerializer(serializers.ModelSerializer):
             'activa',
         ]
 
-#######################################################################
-#                           TPN°4                                     #
-#######################################################################
-
     #validaciones personalizadas a nivel de "field"
     def validate_nombre(self, value):
             #Verificar que el nombre no contenga la palabra "categoria"
@@ -31,7 +27,6 @@ class CategoriaSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("No se puede desactivar la categoria principal")
             return data
 
-########################################################################
 
 class AnuncioReadSerializer(serializers.ModelSerializer):
     precio_usd = serializers.SerializerMethodField()
@@ -53,10 +48,6 @@ class AnuncioReadSerializer(serializers.ModelSerializer):
             'oferta_ganadora'
         ]
         read_only_fields = ['publicado_por', 'oferta_ganadora']
-
-#######################################################################
-#                           TPN°6                                     #
-#######################################################################
 
     def get_precio_usd(self, obj):
         try:
@@ -97,13 +88,7 @@ class AnuncioSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['publicado_por']
 
-
-#######################################################################
-#                           TPN°4                                     #
-#######################################################################    
-
-####Validaciones
-
+    #Validaciones
     def validate_fecha_inicio(self, value):
         if value < timezone.now():
             raise serializers.ValidationError("La fecha de inicio debe ser posterior a hoy.")
@@ -116,11 +101,6 @@ class AnuncioSerializer(serializers.ModelSerializer):
         if fecha_fin and fecha_fin <= fecha_inicio:
             raise serializers.ValidationError("La fecha de fin debe ser posterior a la de inicio.")
         return data
-    
-#######################################################################
-#                           TPN°5                                     #
-#######################################################################
-
 
 class OfertaSerializer(serializers.ModelSerializer):
     class Meta:
