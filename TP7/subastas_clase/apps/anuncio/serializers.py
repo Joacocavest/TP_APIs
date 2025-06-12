@@ -76,6 +76,7 @@ class AnuncioSerializer(serializers.ModelSerializer):
     class Meta:
         model=Anuncio
         fields= [
+            'id',
             'titulo',
             'descripcion',
             'precio_inicial',
